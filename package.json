@@ -32,5 +32,8 @@
     "keytar": "^3.0.2",
     "prompt": "^1.0.0",
     "shelljs": "^0.7.6"
+  },
+  "devDependencies": {
+    "express": "^4.15.3"
   }
 }
