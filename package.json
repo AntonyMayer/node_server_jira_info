@@ -27,6 +27,7 @@
   "homepage": "https://github.com/AntonyMayer/node-terminal-app-test#readme",
   "dependencies": {
     "commander": "^2.9.0",
+    "compression": "^1.6.2",
     "data-store": "^0.16.1",
     "easy-table": "^1.0.0",
     "express": "^4.15.3",
