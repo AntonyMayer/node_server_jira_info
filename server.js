@@ -1,10 +1,12 @@
-const express = require('express'),
-      app = express();
+var express = require('express'),
+    app = express();
 
-app.get('/', function (req, res) {
-  res.send('Hello World!')
-})
+var router = express.Router();
 
-app.listen(3300, function () {
-  console.log('Listening on port 3300!')
-})
+router.get('/', function(req, res) {
+  res.end('Lorem:)');
+});
+
+app.use(router);
+
+app.listen(3300);
