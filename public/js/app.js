@@ -9,13 +9,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var getUpdates = new WebSocket("ws://localhost:3300/socketserver", "protocolOne");
 
+/**
+ * Establish connection
+ */
 getUpdates.onopen = function (event) {
-    console.log("Connected to http://localhost:3300/");
-    getUpdates.send('Test');
+  console.log("Connected to http://localhost:3300/");
+  getUpdates.send('Test');
 };
 
+/**
+ * Update info
+ */
 getUpdates.onmessage = function (event) {
-    (0, _processData2.default)(event.data);
+  (0, _processData2.default)(event.data);
 };
 
 },{"./modules/processData":2}],2:[function(require,module,exports){

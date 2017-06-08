@@ -27,14 +27,14 @@ app.ws('/socketserver', (ws, req) => {
      * Handle ws messages from browser
      */
     ws.on('message', (msg) => {
-        ws.send(`Connection confirmed`);
+        ws.send(`Message from browser received`);
     });
     /**
      * Handle post data updates from Jira CLI
      */
     router.post('/requests', (req, res) => {
         ws.send(JSON.stringify(req.body));
-        res.end('Confirmed');
+        res.end('Done');
     });
 });
 
