@@ -23,7 +23,9 @@
   },
   "homepage": "https://github.com/AntonyMayer/node_server_jira_info#readme",
   "dependencies": {
-    "express": "^4.15.3"
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "mongodb": "^2.2.28"
   },
   "devDependencies": {
     "babelify": "^7.3.0",
