@@ -22,9 +22,9 @@ router.get('/', (req, res) => {
  * Handle post requests
  */
 router.post('/requests', (req, res) => {
-  console.log('post request received');
+  console.log('>> Post request received');
   console.log(req.body);
-  res.end('Done!');
+  res.end('>> Data updated');
 });
 
 /**
@@ -32,7 +32,7 @@ router.post('/requests', (req, res) => {
  */
 MongoClient.connect("mongodb://localhost:27017/jiraStat", function(err, db) {
     if (err) throw err;
-    console.log('>> Connected to DB');
+    console.log('>> Connected to DB >> localhost:27017/jiraStat');
     app.listen(3300);
-    console.log('>> Server started');
+    console.log('>> Server started  >> Listening on 3300');
 });
