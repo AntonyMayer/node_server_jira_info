@@ -1,8 +1,8 @@
-##Start server
+## Start server ##
 
- **npm run dev**
+ `npm run dev`
 
-##Start mongoDB
+## Start mongoDB ##
 
- **mongod --port 27017 --dbpath=./data**
+ `mongod --port 27017 --dbpath=./data`
 
