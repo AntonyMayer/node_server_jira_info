@@ -1,47 +1,27 @@
 {
-  "name": "jira-pull-tickets",
-  "version": "2.5.6",
-  "bin": {
-    "jira": "./index.js"
-  },
-  "description": "Pull tickets from jira",
-  "main": "index.js",
-  "directories": {
-    "modules": "modules"
-  },
+  "name": "node_server_jira_info",
+  "version": "1.0.0",
+  "description": "Server to display jira's statistic data",
+  "main": "index.html",
   "scripts": {
-    "test": "jira test"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/AntonyMayer/node-terminal-app-test"
+    "url": "git+https://github.com/AntonyMayer/node_server_jira_info.git"
   },
   "keywords": [
+    "node",
     "jira"
   ],
   "author": "Anton Kuzniatsou",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AntonyMayer/node-terminal-app-test/issues"
+    "url": "https://github.com/AntonyMayer/node_server_jira_info/issues"
   },
-  "homepage": "https://github.com/AntonyMayer/node-terminal-app-test#readme",
+  "homepage": "https://github.com/AntonyMayer/node_server_jira_info#readme",
   "dependencies": {
-    "commander": "^2.9.0",
-    "compression": "^1.6.2",
-    "data-store": "^0.16.1",
-    "easy-table": "^1.0.0",
-    "express": "^4.15.3",
-    "keytar": "^3.0.2",
-    "prompt": "^1.0.0",
-    "shelljs": "^0.7.6"
-  },
-  "devDependencies": {
-    "babelify": "^7.3.0",
-    "browserify": "^14.4.0",
-    "gulp": "^3.9.1",
-    "gulp-sourcemaps": "^2.6.0",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.9.0"
+    "express": "^4.15.3"
   }
 }
