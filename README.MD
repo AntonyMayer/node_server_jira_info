@@ -9,3 +9,7 @@
 ## DB url ##
 
  `mongodb://localhost:27017/jiraStat`
+
+### Notes ###
+
+Using **D3** to display data;

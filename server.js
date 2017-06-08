@@ -19,25 +19,21 @@ router.get('/', (req, res) => {
     // do smth:)
 });
 
-
-
 /**
  * Handle websocket conections
  */
 app.ws('/socketserver', function(ws, req) {
+    /**
+     * Handle ws messages from browser
+     */
     ws.on('message', function(msg) {
-        console.log(msg);
         ws.send('Message from server received');
-        console.log('>> Message to browser send');
     });
     /**
-     * Handle post requests from Jira CLI
+     * Handle post data updates from Jira CLI
      */
     router.post('/requests', (req, res) => {
-        console.log('>> Post request received');
-        console.log(req.body);
         ws.send(JSON.stringify(req.body));
-        res.end('>> Data updated');
     });
 });
 
