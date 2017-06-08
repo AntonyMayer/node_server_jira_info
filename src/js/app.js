@@ -1,6 +1,10 @@
-var exampleSocket = new WebSocket("ws://localhost:3300/socketserver", "protocolOne");
+var streamUpdates = new WebSocket("ws://localhost:3300/socketserver", "protocolOne");
 
-exampleSocket.onopen = function (event) {
-    exampleSocket.send("Message;)"); 
-    console.log('Message send');
+streamUpdates.onopen = function (event) {
+    streamUpdates.send("Message from browser;)"); 
+    console.log('Message send to server');
 };
+
+streamUpdates.onmessage = function (event) {
+  console.log(event.data);
+}

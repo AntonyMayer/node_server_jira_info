@@ -34,6 +34,7 @@ router.post('/requests', (req, res) => {
 app.ws('/socketserver', function(ws, req) {
   ws.on('message', function(msg) {
     console.log(msg);
+    ws.send('Message received!');
   });
 });
 
