@@ -1,10 +1,11 @@
-var streamUpdates = new WebSocket("ws://localhost:3300/socketserver", "protocolOne");
+var getUpdates = new WebSocket("ws://localhost:3300/socketserver", "protocolOne"),
+    stamp = Date.now();
 
-streamUpdates.onopen = function (event) {
-    streamUpdates.send("Message from browser;)"); 
-    console.log('Message send to server');
+getUpdates.onopen = function(event) {
+    getUpdates.send(stamp);
+    console.log(`Message__${stamp} send to server`);
 };
 
-streamUpdates.onmessage = function (event) {
-  console.log(event.data);
+getUpdates.onmessage = function(event) {
+    console.log(event.data);
 }
