@@ -18,16 +18,9 @@ router.post('/requests', (req, res) => {
   res.end('Lorem');
 });
 
-MongoClient.connect("mongodb://localhost:27017/learnyoumongo", function(err, db) {
-
-    let query = {age: {$lt: parseInt(process.argv[2])}};
-
-    db.collection("parrots").find(query).toArray(function(err, elems) {
-        console.log(elems);
-        // for (let elm of elems) {
-        //     console.log(elm);
-        // }
-    });
+MongoClient.connect("mongodb://localhost:27017/jiraStat", function(err, db) {
+    if (err) throw err;
+    console.log('Connected to DB');
 });
 
 app.listen(3300);
