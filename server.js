@@ -7,7 +7,7 @@ const express = require('express'),
 /**
  * Extending defaults
  */
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser());
 app.use(express.static(__dirname + '/public'));
 app.use(router);
 
