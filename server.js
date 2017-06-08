@@ -34,6 +34,7 @@ app.ws('/socketserver', function(ws, req) {
      */
     router.post('/requests', (req, res) => {
         ws.send(JSON.stringify(req.body));
+        res.end('Confirmed');
     });
 });
 
