@@ -5,12 +5,13 @@ var gulp = require('gulp'),
     browserify = require('browserify'),
     watchify = require('watchify'),
     babel = require('babelify'),
-    sass = require('gulp-sass');
+    sass = require('gulp-sass'),
+    cleanCSS = require('gulp-clean-css');
 
 //dirs
 var jsSrc = './src/js/app.js',
     jsDest = './public/js',
-    cssSrc = './src/scss/style.scss',
+    cssSrc = './src/scss',
     cssDest = './public/css';
 
 //JS
@@ -42,18 +43,18 @@ function rebundle(bundler) {
 
 //CSS
 gulp.task('sass', function() {
-    return gulp.src(cssSrc)
+    return gulp.src(`${cssSrc}/style.scss`)
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
         .pipe(sourcemaps.write(`./maps`))
+        .pipe(cleanCSS({compatibility: '*'}))
         .pipe(gulp.dest(cssDest));
 });
 
 //Default
-gulp.task('build', compile());
 gulp.task('watch', (() => {
     compile(true);
-    gulp.watch(cssSrc, ['sass']);
+    gulp.watch(`${cssSrc}/**/*.scss`, ['sass']);
 })());
 
 gulp.task('default', ['watch']);

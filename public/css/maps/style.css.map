@@ -1,1 +1,0 @@
-{"version":3,"file":"../style.css","sources":["style.scss"],"sourcesContent":["body {\n    #lorem {\n        display: block;\n    } \n}"],"names":[],"mappings":"AAAA,AACI,IADA,CACA,MAAM,CAAC;EACH,OAAO,EAAE,KAAK,GACjB"}
