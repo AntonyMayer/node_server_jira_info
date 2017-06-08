@@ -1,4 +1,4 @@
-module.exports = (data) => {
+export default function (data) {
     try {
         let dataParsed = JSON.parse(data);
         console.log(dataParsed);

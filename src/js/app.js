@@ -1,13 +1,12 @@
-var getUpdates = new WebSocket("ws://localhost:3300/socketserver", "protocolOne"),
-    stamp = Date.now(),
-    processData = require('./modules/processData');
+import processData from './modules/processData';
+
+var getUpdates = new WebSocket("ws://localhost:3300/socketserver", "protocolOne");
 
 getUpdates.onopen = function(event) {
-    getUpdates.send(stamp);
-    console.log(`Message__${stamp} send to server`);
+    console.log(`Connected to http://localhost:3300/`);
+    getUpdates.send('Test');
 };
 
 getUpdates.onmessage = function(event) {
-    console.log(event.data);
     processData(event.data);
 }

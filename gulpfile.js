@@ -16,7 +16,7 @@ var jsSrc = './src/js/app.js',
 
 //JS
 function compile(watch) {
-    var bundler = watchify(browserify(jsSrc, { debug: true }).transform(babel));
+    var bundler = watchify(browserify(jsSrc, { debug: true }).transform("babelify", {presets: ["es2015"]}));
 
     if (watch) {
         bundler.on('update', function() {

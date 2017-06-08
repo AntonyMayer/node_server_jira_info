@@ -22,12 +22,12 @@ app.use(router);
 /**
  * Handle websocket conections
  */
-app.ws('/socketserver', function(ws, req) {
+app.ws('/socketserver', (ws, req) => {
     /**
      * Handle ws messages from browser
      */
-    ws.on('message', function(stamp) {
-        ws.send(`Message__${stamp} was received`);
+    ws.on('message', (msg) => {
+        ws.send(`Connection confirmed`);
     });
     /**
      * Handle post data updates from Jira CLI
@@ -41,7 +41,7 @@ app.ws('/socketserver', function(ws, req) {
 /**
  * Connecting to DB and starting server if connection was succesfull 
  */
-MongoClient.connect("mongodb://localhost:27017/jiraStat", function(err, db) {
+MongoClient.connect("mongodb://localhost:27017/jiraStat", (err, db) => {
     if (err) throw err;
     app.listen(3300);
     console.log('Listening on 3300');
