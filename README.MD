@@ -6,6 +6,6 @@
 
  `mongod --port 27017 --dbpath=./data`
 
-## DB url##
+## DB url ##
 
  `mongodb://localhost:27017/jiraStat`
