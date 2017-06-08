@@ -2,7 +2,8 @@ const express = require('express'),
       bodyParser= require('body-parser'),
       MongoClient = require('mongodb').MongoClient,
       app = express(),
-      router = express.Router();
+      router = express.Router(),
+      expressWs = require('express-ws')(app);
 
 /**
  * Extending defaults
@@ -25,6 +26,15 @@ router.post('/requests', (req, res) => {
   console.log('>> Post request received');
   console.log(req.body);
   res.end('>> Data updated');
+});
+
+/**
+ * Handle websocket conections
+ */
+app.ws('/socketserver', function(ws, req) {
+  ws.on('message', function(msg) {
+    console.log(msg);
+  });
 });
 
 /**
