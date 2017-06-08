@@ -1,9 +1,9 @@
 const express = require('express'),
-      bodyParser= require('body-parser'),
-      MongoClient = require('mongodb').MongoClient,
-      app = express(),
-      router = express.Router(),
-      expressWs = require('express-ws')(app);
+    bodyParser = require('body-parser'),
+    MongoClient = require('mongodb').MongoClient,
+    app = express(),
+    router = express.Router(),
+    expressWs = require('express-ws')(app);
 
 /**
  * Extending defaults
@@ -19,23 +19,26 @@ router.get('/', (req, res) => {
     // do smth:)
 });
 
-/**
- * Handle post requests
- */
-router.post('/requests', (req, res) => {
-  console.log('>> Post request received');
-  console.log(req.body);
-  res.end('>> Data updated');
-});
+
 
 /**
  * Handle websocket conections
  */
 app.ws('/socketserver', function(ws, req) {
-  ws.on('message', function(msg) {
-    console.log(msg);
-    ws.send('Message received!');
-  });
+    ws.on('message', function(msg) {
+        console.log(msg);
+        ws.send('Message from server received');
+        console.log('>> Message to browser send');
+    });
+    /**
+     * Handle post requests from Jira CLI
+     */
+    router.post('/requests', (req, res) => {
+        console.log('>> Post request received');
+        console.log(req.body);
+        ws.send(JSON.stringify(req.body));
+        res.end('>> Data updated');
+    });
 });
 
 /**
