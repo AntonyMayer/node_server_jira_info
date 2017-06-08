@@ -1,1 +1,1 @@
-console.log('lorems');
+console.log('lorem');
