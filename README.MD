@@ -13,17 +13,3 @@
 ### Notes ###
 
 Using **D3** to display data;
-
-
-## How it works ##
-
-``
-**JiraCLIapp** ---- *POST JSON* -----> **Node Express**
-                                   ||
-                        *Forwarding JSON to Browser*
-                                   ||
-**Browser** ======================= **Websocket**
-
-*Display*
-*Data*
-``
