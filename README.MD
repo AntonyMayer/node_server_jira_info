@@ -4,6 +4,10 @@
 
 ## Start mongoDB ##
 
+ if necessary run at ./ 
+ 
+ `mkdir data`
+
  `mongod --port 27017 --dbpath=./data`
 
 ## DB url ##

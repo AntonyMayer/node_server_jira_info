@@ -7,21 +7,24 @@ var _processData2 = _interopRequireDefault(_processData);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var getUpdates = new WebSocket("ws://localhost:3300/socketserver", "protocolOne");
+var jira = {
+    getUpdates: new WebSocket("ws://localhost:3300/socketserver", "protocolOne"),
+    data: {}
 
-/**
- * Establish connection
- */
-getUpdates.onopen = function (event) {
-  console.log("Connected to http://localhost:3300/");
-  getUpdates.send('Test');
+    /**
+     * Establish connection
+     */
+};jira.getUpdates.onopen = function (event) {
+    console.log("Connected to http://localhost:3300/");
+    jira.getUpdates.send('Test');
 };
 
 /**
  * Update info
  */
-getUpdates.onmessage = function (event) {
-  (0, _processData2.default)(event.data);
+jira.getUpdates.onmessage = function (event) {
+    (0, _processData2.default)(jira, JSON.parse(event.data));
+    console.log(jira);
 };
 
 },{"./modules/processData":2}],2:[function(require,module,exports){
@@ -31,13 +34,58 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-exports.default = function (data) {
-    try {
-        var dataParsed = JSON.parse(data);
-        console.log(dataParsed);
-    } catch (e) {
-        console.log(data);
+exports.default = function (obj, data) {
+    // obj.dataplate = [{
+    //     assignees: [
+    //         null
+    //     ],
+    //     blocked: 0,
+    //     closed: 0,
+    //     devComplete: 0,
+    //     devTest: 0,
+    //     inProgress: 0,
+    //     name: null,
+    //     opened: 0,
+    //     project: null,
+    //     readyForTest: 0,
+    //     tridion: 0,
+    // }];
+
+    console.log(data);
+
+    //check if data is an array
+    if (!Array.isArray(data)) {
+        console.log(data.message || data);
+        return;
     }
+
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+        for (var _iterator = data[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var item = _step.value;
+
+            console.log(item);
+            obj.data[item.project] = item;
+        }
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+            }
+        } finally {
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+
+    console.log(obj);
 };
 
 },{}]},{},[1])

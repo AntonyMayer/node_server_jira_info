@@ -27,7 +27,7 @@ app.ws('/socketserver', (ws, req) => {
      * Handle ws messages from browser
      */
     ws.on('message', (msg) => {
-        ws.send(`Message from browser received`);
+        ws.send(`{"message": "Websocket opened"}`);
     });
     /**
      * Handle post data updates from Jira CLI
