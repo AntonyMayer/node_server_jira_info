@@ -20,6 +20,6 @@ jira.getUpdates.onopen = function(event) {
  */
 jira.getUpdates.onmessage = function(event) {
     processData(jira, JSON.parse(event.data));
-    buildTable(jira.data, 'projects');
-    buildTable(jira.data, 'devs');
+    buildTable(jira.data.projects, 'projects');
+    buildTable(jira.data.devs, 'devs');
 }

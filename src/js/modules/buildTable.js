@@ -1,15 +1,55 @@
-export default function(data, type) {
+/**
+ * Module to build tables based on data type
+ * 
+ * @export tablesFactory function
+ * @param {object} [data={}] data to be used in table 
+ * @param {string} [type="projects"]  table type => "projects" || "devs"
+ * @returns {void}
+ */
+export default function(data = {}, type = "projects") {
 
-    //check if object is not empty
+    //check if data object is not empty
     if (noData(data)) return;
 
-    //create table and rows, find container
-    let table = createNode('table'),
-        rows = createRows(data),
-        container = document.getElementById("current_projects"),
-        headers = ['Project', 'Key', '(Re)Open', 'In Progress', 'Dev Complete', 'Tridion Pbl', 'QA Test', 'Blocked', 'Closed', 'Assignees'];
-    
+    //config for table, headers, rows, container
+    let container = document.getElementById("current_projects"),
+        table = createNode('table'),
+        headers = createHeaders(data, type),
+        rows = createRows(data);
+
     createTable(container, table, headers, rows);
+}
+
+/**
+ * Create headers for table based on type
+ * 
+ * @param {any} data object containing data on current projects
+ * @param {any} type table type => "projects" || "devs"
+ * @returns 
+ */
+function createHeaders(data, type) {
+    let headers = [];
+    if (type === "projects") {
+        headers = [
+            'Project', 
+            'Key', 
+            '(Re)Open', 
+            'In Progress', 
+            'Dev Complete', 
+            'Tridion Pbl', 
+            'QA Test', 
+            'Blocked', 
+            'Closed', 
+            'Assignees'
+            ];
+    } else {
+        for (let dev in data) {
+            for (let project in data[dev]) {
+                if(!headers.includes(project)) headers.push(project);
+            }
+        }
+    }
+    return headers;
 }
 
 /**

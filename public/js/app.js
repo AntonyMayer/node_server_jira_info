@@ -29,36 +29,68 @@ var jira = {
  */
 jira.getUpdates.onmessage = function (event) {
     (0, _processData2.default)(jira, JSON.parse(event.data));
-    (0, _buildTable2.default)(jira.data, 'projects');
-    (0, _buildTable2.default)(jira.data, 'devs');
+    (0, _buildTable2.default)(jira.data.projects, 'projects');
+    (0, _buildTable2.default)(jira.data.devs, 'devs');
 };
 
 },{"./modules/buildTable":2,"./modules/processData":3}],2:[function(require,module,exports){
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-exports.default = function (data, type) {
+exports.default = function () {
+    var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "projects";
 
-    //check if object is not empty
+
+    //check if data object is not empty
     if (noData(data)) return;
 
-    //create table and rows, find container
-    var table = createNode('table'),
-        rows = createRows(data),
-        container = document.getElementById("current_projects"),
-        headers = ['Project', 'Key', '(Re)Open', 'In Progress', 'Dev Complete', 'Tridion Pbl', 'QA Test', 'Blocked', 'Closed', 'Assignees'];
+    //config for table, headers, rows, container
+    var container = document.getElementById("current_projects"),
+        table = createNode('table'),
+        headers = createHeaders(data, type),
+        rows = createRows(data);
 
     createTable(container, table, headers, rows);
 };
+
+/**
+ * Create headers for table based on type
+ * 
+ * @param {any} data object containing data on current projects
+ * @param {any} type table type => "projects" || "devs"
+ * @returns 
+ */
+function createHeaders(data, type) {
+    var headers = [];
+    if (type === "projects") {
+        headers = ['Project', 'Key', '(Re)Open', 'In Progress', 'Dev Complete', 'Tridion Pbl', 'QA Test', 'Blocked', 'Closed', 'Assignees'];
+    } else {
+        for (var dev in data) {
+            for (var project in data[dev]) {
+                if (!headers.includes(project)) headers.push(project);
+            }
+        }
+    }
+    return headers;
+}
 
 /**
  * Check if data is a proper object
  * 
  * @param {object} data object to check 
  * @returns {boolean} 
+ */
+/**
+ * Module to build tables based on data type
+ * 
+ * @export tablesFactory function
+ * @param {object} [data={}] data to be used in table 
+ * @param {string} [type="projects"]  table type => "projects" || "devs"
+ * @returns {void}
  */
 function noData(data) {
     console.log(data);
@@ -78,7 +110,7 @@ function noData(data) {
  */
 function createNode(type, content) {
     var node = document.createElement(type);
-    type === "table" ? node.className = "b_table" : node.className = 'b_table__' + type;
+    type === "table" ? node.className = "b_table" : node.className = "b_table__" + type;
     if (content || content === 0) node.textContent = content;
     return node;
 }
