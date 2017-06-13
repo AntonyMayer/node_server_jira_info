@@ -11,8 +11,6 @@ export default function(data = {}, type = "projects") {
     //check if data object is not empty
     if (noData(data)) return;
 
-    console.log(data);
-
     //config for table, headers, rows, container
     let container = document.getElementById("current_projects"),
         table = createNode('table'),
@@ -52,7 +50,6 @@ function createHeaders(data, type) {
             }
         }
     }
-    console.log(headers);
     return headers;
 }
 
@@ -63,9 +60,7 @@ function createHeaders(data, type) {
  * @returns {boolean} 
  */
 function noData(data) {
-    console.log(data);
     if (Object.keys(data).length === 0 && data.constructor === Object) {
-        console.log('No data to display');
         return true;
     }
     return false;
@@ -89,19 +84,29 @@ function createNode(nodeType, content) {
  * Creaet rows from data
  * 
  * @param {object} data object containing data on current projects
+ * @param {string} type table type => "projects" || "devs"
  * @returns {array} with html nodes
  */
 function createRows(data, type, headers) {
     let rows = [];
     for (let row in data) {
-        console.log(row);
         let tr = createNode('tr');
         rows.push(createCell(tr, data[row], row, type, headers));
     }
     return rows;
 }
 
-function createCell(tr, data, row, type, headers) {
+/**
+ * Create cell beased on bunch of params...
+ * 
+ * @param {object} tr current tr html node
+ * @param {object} data object containing data on current projects
+ * @param {string} name name of the current row 
+ * @param {string} type table type => "projects" || "devs"
+ * @param {array} headers array with data for table headers
+ * @returns {object} tr html node
+ */
+function createCell(tr, data, name, type, headers) {
     let cells = [];
 
     if (type === "projects") {
@@ -125,7 +130,7 @@ function createCell(tr, data, row, type, headers) {
 
     } else {
         for (let project of headers) cells.push(0);
-        cells[0] = row; //set dev name as the first value in cells array
+        cells[0] = name; //set dev name as the first value in cells array
         for (let project in data) {
             //assign dev's project value (num of tickets) to proper position in cells arr
             cells[headers.indexOf(project)] = data[project]; 

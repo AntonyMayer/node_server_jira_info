@@ -1,9 +1,19 @@
 const express = require('express'),
     bodyParser = require('body-parser'),
     MongoClient = require('mongodb').MongoClient,
+    assert = require('assert'),
     app = express(),
     router = express.Router(),
     expressWs = require('express-ws')(app);
+
+/**
+ * Config
+ */
+var jira = {
+    db: null, //reference to db
+    temp: null, //reference to temp collection
+    port: 7700
+}
 
 /**
  * Extending defaults
@@ -13,27 +23,30 @@ app.use(express.static(__dirname + '/public'));
 app.use(router);
 
 /**
- * Handle get requests
- */
-// router.get('/', (req, res) => {
-//     // do smth:)
-// });
-
-/**
  * Handle websocket conections
  */
 app.ws('/socketserver', (ws, req) => {
     /**
-     * Handle ws messages from browser
+     * Handle messages from browser
      */
     ws.on('message', (msg) => {
-        ws.send(`{"message": "Websocket opened"}`);
+        jira.temp.find({}).toArray(function(err, tmp) {
+            assert.equal(err, null);
+            ws.send(JSON.stringify(tmp[0]));
+        });
+        ws.send(`{"message": "Server  >> Websocket opened"}`);
     });
     /**
      * Handle post data updates from Jira CLI
      */
     router.post('/requests', (req, res) => {
+        //send update to browser
         ws.send(JSON.stringify(req.body));
+
+        //write data to DB
+        jira.temp.remove({});
+        jira.temp.insert(req.body);
+
         res.end('Done');
     });
 });
@@ -43,6 +56,12 @@ app.ws('/socketserver', (ws, req) => {
  */
 MongoClient.connect("mongodb://localhost:27017/jiraStat", (err, db) => {
     if (err) throw err;
-    app.listen(3300);
-    console.log('Listening on 3300');
+
+    jira.db = db;
+    jira.temp = db.collection('records');
+
+    app.listen(jira.port);
+
+    console.log('Server >> MongoDB connected.');
+    console.log(`Server >> Listening on ${jira.port}`);
 });

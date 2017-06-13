@@ -1,0 +1,81 @@
+{
+  "projects": [
+    {
+      "name": "Manatee_Melano...",
+      "project": "CMMA",
+      "opened": 0,
+      "inProgress": 0,
+      "devComplete": 0,
+      "devTest": 0,
+      "tridion": 0,
+      "readyForTest": 0,
+      "blocked": 0,
+      "closed": 53,
+      "assignees": []
+    },
+    {
+      "name": "Bear_Bladder...",
+      "project": "CBHB",
+      "opened": 0,
+      "inProgress": 0,
+      "devComplete": 0,
+      "devTest": 0,
+      "tridion": 0,
+      "readyForTest": 0,
+      "blocked": 0,
+      "closed": 140,
+      "assignees": []
+    },
+    {
+      "name": "McKinley_Pk_Co...",
+      "project": "CMPCLP",
+      "opened": 0,
+      "inProgress": 0,
+      "devComplete": 0,
+      "devTest": 0,
+      "tridion": 0,
+      "readyForTest": 0,
+      "blocked": 0,
+      "closed": 59,
+      "assignees": []
+    },
+    {
+      "name": "Moose_H...",
+      "project": "CMHM",
+      "opened": 0,
+      "inProgress": 0,
+      "devComplete": 0,
+      "devTest": 0,
+      "tridion": 0,
+      "readyForTest": 0,
+      "blocked": 1,
+      "closed": 126,
+      "assignees": []
+    },
+    {
+      "name": "DETROIT_JIRA_T...",
+      "project": "CDMJT",
+      "opened": 2,
+      "inProgress": 0,
+      "devComplete": 0,
+      "devTest": 1,
+      "tridion": 10,
+      "readyForTest": 0,
+      "blocked": 3,
+      "closed": 8,
+      "assignees": [
+        "Ale",
+        "Adr"
+      ]
+    }
+  ],
+  "devs": {
+    "Alejandro": {
+      "DETROIT_JIRA_T...": 1
+    },
+    "Adrian": {
+      "DETROIT_JIRA_T...": 1
+    }
+  },
+  "_id": "tmpJIRAdata"
+}

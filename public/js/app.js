@@ -11,16 +11,26 @@ var _buildTable2 = _interopRequireDefault(_buildTable);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//namespace object
+/**
+ * Namespace object
+ */
 var jira = {
-    getUpdates: new WebSocket("ws://localhost:3300/socketserver", "protocolOne"),
-    data: {}
+    getUpdates: new WebSocket("ws://localhost:7700/socketserver", "protocolOne"),
+    data: {
+        projects: {}, //data for currently tracked projects
+        devs: {} //data for tickets by developers
+    },
+    widgets: {
+        tables: {
+            contsinerID: "current_projects"
+        }
+    }
 
     /**
      * Establish connection
      */
 };jira.getUpdates.onopen = function (event) {
-    console.log('Connected to http://localhost:3300/');
+    console.log('Browser >> Connected to http://localhost:7700/');
     jira.getUpdates.send('Test');
 };
 
@@ -29,9 +39,17 @@ var jira = {
  */
 jira.getUpdates.onmessage = function (event) {
     (0, _processData2.default)(jira, JSON.parse(event.data));
+    tablesWidgetUpdate();
+};
+
+/**
+ * Tables update
+ */
+function tablesWidgetUpdate() {
+    document.getElementById(jira.widgets.tables.contsinerID).textContent = '';
     (0, _buildTable2.default)(jira.data.projects, 'projects');
     (0, _buildTable2.default)(jira.data.devs, 'devs');
-};
+}
 
 },{"./modules/buildTable":2,"./modules/processData":3}],2:[function(require,module,exports){
 "use strict";
@@ -47,8 +65,6 @@ exports.default = function () {
 
     //check if data object is not empty
     if (noData(data)) return;
-
-    console.log(data);
 
     //config for table, headers, rows, container
     var container = document.getElementById("current_projects"),
@@ -78,7 +94,6 @@ function createHeaders(data, type) {
             }
         }
     }
-    console.log(headers);
     return headers;
 }
 
@@ -97,9 +112,7 @@ function createHeaders(data, type) {
  * @returns {void}
  */
 function noData(data) {
-    console.log(data);
     if (Object.keys(data).length === 0 && data.constructor === Object) {
-        console.log('No data to display');
         return true;
     }
     return false;
@@ -123,19 +136,29 @@ function createNode(nodeType, content) {
  * Creaet rows from data
  * 
  * @param {object} data object containing data on current projects
+ * @param {string} type table type => "projects" || "devs"
  * @returns {array} with html nodes
  */
 function createRows(data, type, headers) {
     var rows = [];
     for (var row in data) {
-        console.log(row);
         var tr = createNode('tr');
         rows.push(createCell(tr, data[row], row, type, headers));
     }
     return rows;
 }
 
-function createCell(tr, data, row, type, headers) {
+/**
+ * Create cell beased on bunch of params...
+ * 
+ * @param {object} tr current tr html node
+ * @param {object} data object containing data on current projects
+ * @param {string} name name of the current row 
+ * @param {string} type table type => "projects" || "devs"
+ * @param {array} headers array with data for table headers
+ * @returns {object} tr html node
+ */
+function createCell(tr, data, name, type, headers) {
     var cells = [];
 
     if (type === "projects") {
@@ -153,7 +176,7 @@ function createCell(tr, data, row, type, headers) {
             _data$inProgress = data.inProgress,
             inProgress = _data$inProgress === undefined ? 0 : _data$inProgress,
             _data$name = data.name,
-            name = _data$name === undefined ? "Top Secret" : _data$name,
+            _name = _data$name === undefined ? "Top Secret" : _data$name,
             _data$opened = data.opened,
             opened = _data$opened === undefined ? 0 : _data$opened,
             _data$project = data.project,
@@ -165,7 +188,8 @@ function createCell(tr, data, row, type, headers) {
 
         //building an array for cells in a proper order
 
-        cells = [name, project, opened, inProgress, devComplete, tridion, readyForTest, blocked, closed, assignees];
+
+        cells = [_name, project, opened, inProgress, devComplete, tridion, readyForTest, blocked, closed, assignees];
     } else {
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
@@ -191,7 +215,7 @@ function createCell(tr, data, row, type, headers) {
             }
         }
 
-        cells[0] = row; //set dev name as the first value in cells array
+        cells[0] = name; //set dev name as the first value in cells array
         for (var _project in data) {
             //assign dev's project value (num of tickets) to proper position in cells arr
             cells[headers.indexOf(_project)] = data[_project];
