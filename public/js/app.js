@@ -48,11 +48,13 @@ exports.default = function () {
     //check if data object is not empty
     if (noData(data)) return;
 
+    console.log(data);
+
     //config for table, headers, rows, container
     var container = document.getElementById("current_projects"),
         table = createNode('table'),
         headers = createHeaders(data, type),
-        rows = createRows(data);
+        rows = createRows(data, type, headers);
 
     createTable(container, table, headers, rows);
 };
@@ -69,12 +71,14 @@ function createHeaders(data, type) {
     if (type === "projects") {
         headers = ['Project', 'Key', '(Re)Open', 'In Progress', 'Dev Complete', 'Tridion Pbl', 'QA Test', 'Blocked', 'Closed', 'Assignees'];
     } else {
+        headers = ['Developer'];
         for (var dev in data) {
             for (var project in data[dev]) {
                 if (!headers.includes(project)) headers.push(project);
             }
         }
     }
+    console.log(headers);
     return headers;
 }
 
@@ -104,13 +108,13 @@ function noData(data) {
 /**
  * Elements factory
  * 
- * @param {string} type indicate element type
+ * @param {string} nodeType indicate element type
  * @param {string} content set textContent for element
  * @returns {object} html node
  */
-function createNode(type, content) {
-    var node = document.createElement(type);
-    type === "table" ? node.className = "b_table" : node.className = "b_table__" + type;
+function createNode(nodeType, content) {
+    var node = document.createElement(nodeType);
+    nodeType === "table" ? node.className = "b_table" : node.className = "b_table__" + nodeType;
     if (content || content === 0) node.textContent = content;
     return node;
 }
@@ -121,92 +125,85 @@ function createNode(type, content) {
  * @param {object} data object containing data on current projects
  * @returns {array} with html nodes
  */
-function createRows(data) {
+function createRows(data, type, headers) {
     var rows = [];
     for (var row in data) {
+        console.log(row);
         var tr = createNode('tr');
-        rows.push(createCell(tr, data[row]));
+        rows.push(createCell(tr, data[row], row, type, headers));
     }
     return rows;
 }
 
-function createCell(tr, data) {
-    //destructuring object with project data & assigning default values
-    var _data$assignees = data.assignees,
-        assignees = _data$assignees === undefined ? [null] : _data$assignees,
-        _data$blocked = data.blocked,
-        blocked = _data$blocked === undefined ? 0 : _data$blocked,
-        _data$closed = data.closed,
-        closed = _data$closed === undefined ? 0 : _data$closed,
-        _data$devComplete = data.devComplete,
-        devComplete = _data$devComplete === undefined ? 0 : _data$devComplete,
-        _data$devTest = data.devTest,
-        devTest = _data$devTest === undefined ? 0 : _data$devTest,
-        _data$inProgress = data.inProgress,
-        inProgress = _data$inProgress === undefined ? 0 : _data$inProgress,
-        _data$name = data.name,
-        name = _data$name === undefined ? "Classified" : _data$name,
-        _data$opened = data.opened,
-        opened = _data$opened === undefined ? 0 : _data$opened,
-        _data$project = data.project,
-        project = _data$project === undefined ? "Top Secret" : _data$project,
-        _data$readyForTest = data.readyForTest,
-        readyForTest = _data$readyForTest === undefined ? 0 : _data$readyForTest,
-        _data$tridion = data.tridion,
-        tridion = _data$tridion === undefined ? 0 : _data$tridion;
+function createCell(tr, data, row, type, headers) {
+    var cells = [];
 
-    //building an array for cells in a proper order
+    if (type === "projects") {
+        //destructuring object with project data & assigning default values
+        var _data$assignees = data.assignees,
+            assignees = _data$assignees === undefined ? [null] : _data$assignees,
+            _data$blocked = data.blocked,
+            blocked = _data$blocked === undefined ? 0 : _data$blocked,
+            _data$closed = data.closed,
+            closed = _data$closed === undefined ? 0 : _data$closed,
+            _data$devComplete = data.devComplete,
+            devComplete = _data$devComplete === undefined ? 0 : _data$devComplete,
+            _data$devTest = data.devTest,
+            devTest = _data$devTest === undefined ? 0 : _data$devTest,
+            _data$inProgress = data.inProgress,
+            inProgress = _data$inProgress === undefined ? 0 : _data$inProgress,
+            _data$name = data.name,
+            name = _data$name === undefined ? "Top Secret" : _data$name,
+            _data$opened = data.opened,
+            opened = _data$opened === undefined ? 0 : _data$opened,
+            _data$project = data.project,
+            project = _data$project === undefined ? "Classified" : _data$project,
+            _data$readyForTest = data.readyForTest,
+            readyForTest = _data$readyForTest === undefined ? 0 : _data$readyForTest,
+            _data$tridion = data.tridion,
+            tridion = _data$tridion === undefined ? 0 : _data$tridion;
 
-    var cells = [name, project, opened, inProgress, devComplete, tridion, readyForTest, blocked, closed, assignees];
+        //building an array for cells in a proper order
 
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+        cells = [name, project, opened, inProgress, devComplete, tridion, readyForTest, blocked, closed, assignees];
+    } else {
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-    try {
-        for (var _iterator = cells[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var cell = _step.value;
-
-            var td = createNode('td', cell);
-            tr.appendChild(td);
-        }
-    } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-    } finally {
         try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
+            for (var _iterator = headers[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var _project2 = _step.value;
+                cells.push(0);
             }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
         } finally {
-            if (_didIteratorError) {
-                throw _iteratorError;
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
             }
+        }
+
+        cells[0] = row; //set dev name as the first value in cells array
+        for (var _project in data) {
+            //assign dev's project value (num of tickets) to proper position in cells arr
+            cells[headers.indexOf(_project)] = data[_project];
         }
     }
 
-    return tr;
-}
-
-/**
- * Build a table
- * 
- * @param {object} container table's container
- * @param {object} table html node object
- * @param {array} headers array with headers' values
- * @param {array} rows array with html nodes to be used as rows
- * @returns {void} 
- */
-function createTable(container, table, headers, rows) {
-
-    //create headers
-    var tr = createNode('tr');
     var _iteratorNormalCompletion2 = true;
     var _didIteratorError2 = false;
     var _iteratorError2 = undefined;
 
     try {
-        for (var _iterator2 = headers[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (var _iterator2 = cells[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
             var cell = _step2.value;
 
             var td = createNode('td', cell);
@@ -227,21 +224,33 @@ function createTable(container, table, headers, rows) {
         }
     }
 
-    table.appendChild(tr);
+    return tr;
+}
 
-    // table.appendChild(headers);
+/**
+ * Build a table
+ * 
+ * @param {object} container table's container
+ * @param {object} table html node object
+ * @param {array} headers array with headers' values
+ * @param {array} rows array with html nodes to be used as rows
+ * @returns {void} 
+ */
+function createTable(container, table, headers, rows) {
+
+    //create headers
+    var tr = createNode('tr');
     var _iteratorNormalCompletion3 = true;
     var _didIteratorError3 = false;
     var _iteratorError3 = undefined;
 
     try {
-        for (var _iterator3 = rows[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            var row = _step3.value;
+        for (var _iterator3 = headers[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var cell = _step3.value;
 
-            table.appendChild(row);
+            var td = createNode('td', cell);
+            tr.appendChild(td);
         }
-
-        //append table to its container
     } catch (err) {
         _didIteratorError3 = true;
         _iteratorError3 = err;
@@ -253,6 +262,36 @@ function createTable(container, table, headers, rows) {
         } finally {
             if (_didIteratorError3) {
                 throw _iteratorError3;
+            }
+        }
+    }
+
+    table.appendChild(tr);
+
+    // table.appendChild(headers);
+    var _iteratorNormalCompletion4 = true;
+    var _didIteratorError4 = false;
+    var _iteratorError4 = undefined;
+
+    try {
+        for (var _iterator4 = rows[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var row = _step4.value;
+
+            table.appendChild(row);
+        }
+
+        //append table to its container
+    } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                _iterator4.return();
+            }
+        } finally {
+            if (_didIteratorError4) {
+                throw _iteratorError4;
             }
         }
     }

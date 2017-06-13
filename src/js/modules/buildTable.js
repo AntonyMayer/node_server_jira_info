@@ -11,11 +11,13 @@ export default function(data = {}, type = "projects") {
     //check if data object is not empty
     if (noData(data)) return;
 
+    console.log(data);
+
     //config for table, headers, rows, container
     let container = document.getElementById("current_projects"),
         table = createNode('table'),
         headers = createHeaders(data, type),
-        rows = createRows(data);
+        rows = createRows(data, type, headers);
 
     createTable(container, table, headers, rows);
 }
@@ -31,24 +33,26 @@ function createHeaders(data, type) {
     let headers = [];
     if (type === "projects") {
         headers = [
-            'Project', 
-            'Key', 
-            '(Re)Open', 
-            'In Progress', 
-            'Dev Complete', 
-            'Tridion Pbl', 
-            'QA Test', 
-            'Blocked', 
-            'Closed', 
+            'Project',
+            'Key',
+            '(Re)Open',
+            'In Progress',
+            'Dev Complete',
+            'Tridion Pbl',
+            'QA Test',
+            'Blocked',
+            'Closed',
             'Assignees'
-            ];
+        ];
     } else {
+        headers = ['Developer'];
         for (let dev in data) {
             for (let project in data[dev]) {
-                if(!headers.includes(project)) headers.push(project);
+                if (!headers.includes(project)) headers.push(project);
             }
         }
     }
+    console.log(headers);
     return headers;
 }
 
@@ -70,13 +74,13 @@ function noData(data) {
 /**
  * Elements factory
  * 
- * @param {string} type indicate element type
+ * @param {string} nodeType indicate element type
  * @param {string} content set textContent for element
  * @returns {object} html node
  */
-function createNode(type, content) {
-    let node = document.createElement(type);
-    (type === "table") ? node.className = "b_table": node.className = `b_table__${type}`;
+function createNode(nodeType, content) {
+    let node = document.createElement(nodeType);
+    (nodeType === "table") ? node.className = "b_table": node.className = `b_table__${nodeType}`;
     if (content || content === 0) node.textContent = content;
     return node;
 }
@@ -87,33 +91,46 @@ function createNode(type, content) {
  * @param {object} data object containing data on current projects
  * @returns {array} with html nodes
  */
-function createRows(data) {
+function createRows(data, type, headers) {
     let rows = [];
     for (let row in data) {
+        console.log(row);
         let tr = createNode('tr');
-        rows.push(createCell(tr, data[row]));
+        rows.push(createCell(tr, data[row], row, type, headers));
     }
     return rows;
 }
 
-function createCell(tr, data) {
-    //destructuring object with project data & assigning default values
-    let {
-        assignees = [null],
-            blocked = 0,
-            closed = 0,
-            devComplete = 0,
-            devTest = 0,
-            inProgress = 0,
-            name = "Classified",
-            opened = 0,
-            project = "Top Secret",
-            readyForTest = 0,
-            tridion = 0
-    } = data;
+function createCell(tr, data, row, type, headers) {
+    let cells = [];
 
-    //building an array for cells in a proper order
-    let cells = [name, project, opened, inProgress, devComplete, tridion, readyForTest, blocked, closed, assignees]
+    if (type === "projects") {
+        //destructuring object with project data & assigning default values
+        let {
+            assignees = [null],
+                blocked = 0,
+                closed = 0,
+                devComplete = 0,
+                devTest = 0,
+                inProgress = 0,
+                name = "Top Secret",
+                opened = 0,
+                project = "Classified",
+                readyForTest = 0,
+                tridion = 0
+        } = data;
+
+        //building an array for cells in a proper order
+        cells = [name, project, opened, inProgress, devComplete, tridion, readyForTest, blocked, closed, assignees];
+
+    } else {
+        for (let project of headers) cells.push(0);
+        cells[0] = row; //set dev name as the first value in cells array
+        for (let project in data) {
+            //assign dev's project value (num of tickets) to proper position in cells arr
+            cells[headers.indexOf(project)] = data[project]; 
+        }
+    }
 
     for (let cell of cells) {
         let td = createNode('td', cell);
@@ -132,7 +149,7 @@ function createCell(tr, data) {
  * @returns {void} 
  */
 function createTable(container, table, headers, rows) {
-       
+
     //create headers
     let tr = createNode('tr');
     for (let cell of headers) {
