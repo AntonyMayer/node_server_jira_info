@@ -4,7 +4,7 @@
 
 ## Start mongoDB ##
 
- if necessary run at ./ 
+ if necessary run 
  
  `mkdir data`
 

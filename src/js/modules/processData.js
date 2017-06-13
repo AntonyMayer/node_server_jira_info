@@ -1,32 +1,14 @@
-export default function(obj, data) {
-    // obj.dataplate = [{
-    //     assignees: [
-    //         null
-    //     ],
-    //     blocked: 0,
-    //     closed: 0,
-    //     devComplete: 0,
-    //     devTest: 0,
-    //     inProgress: 0,
-    //     name: null,
-    //     opened: 0,
-    //     project: null,
-    //     readyForTest: 0,
-    //     tridion: 0,
-    // }];
-
-    console.log(data);
+export default function(jira, data) {
     
-    //check if data is an array
-    if (!Array.isArray(data)) {
-        console.log(data.message || data);
+    //check if data contains message
+    if (data.message) {
+        console.log(data.message);
         return;
     }
 
-    for (let item of data) {
-        console.log(item);
-        obj.data[item.project] = item;
+    //update jira.data object
+    for (let item in data) {
+        jira.data[item] = data[item];
     }
-
-    console.log(obj);
+    console.log(jira.data);
 }
