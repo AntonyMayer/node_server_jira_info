@@ -1,0 +1,24 @@
+.b_table {
+    margin: 50px auto;
+    border-spacing: 0px;
+    border: 15px solid #fff;
+    box-shadow: 0 0 35px #777;
+}
+
+.b_table__td {
+    border-top: 1px solid #fff;
+    padding: 25px;
+    text-align: center;
+    &:nth-of-type(1) {
+        text-align: left;
+        font-weight: bold;
+        border-right: 1px solid #fff;
+        background: rgba(0, 0, 0, .1);
+    }
+}
+
+.b_table__th {
+    @extend .b_table__td;
+    font-weight: bold;
+    background: rgba(0, 0, 0, .1);
+}

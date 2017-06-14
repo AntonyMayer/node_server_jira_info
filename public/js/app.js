@@ -15,7 +15,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Namespace object
  */
 var jira = {
-    webSocket: new WebSocket("ws://localhost:7700/socketserver"),
+    webSocket: new WebSocket("ws://10.89.236.210:7700/socketserver"),
     data: {
         projects: {}, //data for currently tracked projects
         devs: {} //data for tickets by developers
@@ -30,7 +30,7 @@ var jira = {
      * Establish connection
      */
 };jira.webSocket.onopen = function (event) {
-    console.log('Browser >> Connected to http://localhost:7700/');
+    console.log('Browser >> Connected to http://10.89.236.210/');
     jira.webSocket.send('Test');
 };
 
@@ -85,7 +85,7 @@ exports.default = function () {
 function createHeaders(data, type) {
     var headers = [];
     if (type === "projects") {
-        headers = ['Project', 'Key', '(Re)Open', 'In Progress', 'Dev Complete', 'Tridion Pbl', 'QA Test', 'Blocked', 'Closed', 'Assignees'];
+        headers = ['Project', 'Jira Key', '(Re)Open', 'In Progress', 'Dev Complete', 'Tridion Pbl', 'QA Test', 'Blocked', 'Closed', 'Assignees'];
     } else {
         headers = ['Developer'];
         for (var dev in data) {
@@ -272,7 +272,7 @@ function createTable(container, table, headers, rows) {
         for (var _iterator3 = headers[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
             var cell = _step3.value;
 
-            var td = createNode('td', cell);
+            var td = createNode('th', cell);
             tr.appendChild(td);
         }
     } catch (err) {

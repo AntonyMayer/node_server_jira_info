@@ -32,7 +32,7 @@ function createHeaders(data, type) {
     if (type === "projects") {
         headers = [
             'Project',
-            'Key',
+            'Jira Key',
             '(Re)Open',
             'In Progress',
             'Dev Complete',
@@ -158,7 +158,7 @@ function createTable(container, table, headers, rows) {
     //create headers
     let tr = createNode('tr');
     for (let cell of headers) {
-        let td = createNode('td', cell);
+        let td = createNode('th', cell);
         tr.appendChild(td);
     }
     table.appendChild(tr);

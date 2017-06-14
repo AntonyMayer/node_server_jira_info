@@ -5,7 +5,7 @@ import buildTable from './modules/buildTable';
  * Namespace object
  */
 var jira = {
-    webSocket: new WebSocket("ws://localhost:7700/socketserver"),
+    webSocket: new WebSocket("ws://10.89.236.210:7700/socketserver"),
     data: {
         projects: {}, //data for currently tracked projects
         devs: {} //data for tickets by developers
@@ -21,7 +21,7 @@ var jira = {
  * Establish connection
  */
 jira.webSocket.onopen = function(event) {
-    console.log(`Browser >> Connected to http://localhost:7700/`);
+    console.log(`Browser >> Connected to http://10.89.236.210/`);
     jira.webSocket.send('Test');
 };
 

@@ -1,1 +1,1 @@
-body{background:#333;color:#bbb}
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);body{background:linear-gradient(to right,#25c481,#25b7c4);color:#fff;font-family:Roboto,sans-serif}.b_table{margin:50px auto;border-spacing:0;border:15px solid #fff;box-shadow:0 0 35px #777}.b_table__td,.b_table__th{border-top:1px solid #fff;padding:25px;text-align:center}.b_table__td:nth-of-type(1),.b_table__th:nth-of-type(1){text-align:left;font-weight:700;border-right:1px solid #fff;background:rgba(0,0,0,.1)}.b_table__th{font-weight:700;background:rgba(0,0,0,.1)}

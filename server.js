@@ -64,7 +64,6 @@ router.ws('/socketserver', (ws, req) => {
         }
     });
 
-
     ws.on('close', _ => {
         console.log('Server >> Websocket closed');
     });
