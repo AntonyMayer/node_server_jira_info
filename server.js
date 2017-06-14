@@ -30,6 +30,7 @@ app.ws('/socketserver', (ws, req) => {
      * Handle messages from browser
      */
     ws.on('message', (msg) => {
+        //update data
         jira.temp.find({}).toArray(function(err, tmp) {
             assert.equal(err, null);
             ws.send(JSON.stringify(tmp[0]));

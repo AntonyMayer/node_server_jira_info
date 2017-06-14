@@ -11,7 +11,7 @@ export default function(data = {}, type = "projects") {
     //check if data object is not empty
     if (noData(data)) return;
 
-    //config for table, headers, rows, container
+    //create table, headers, rows, select container
     let container = document.getElementById("current_projects"),
         table = createNode('table'),
         headers = createHeaders(data, type),

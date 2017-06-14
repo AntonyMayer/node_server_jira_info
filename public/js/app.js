@@ -66,7 +66,7 @@ exports.default = function () {
     //check if data object is not empty
     if (noData(data)) return;
 
-    //config for table, headers, rows, container
+    //create table, headers, rows, select container
     var container = document.getElementById("current_projects"),
         table = createNode('table'),
         headers = createHeaders(data, type),
