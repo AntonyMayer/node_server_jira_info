@@ -15,7 +15,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Namespace object
  */
 var jira = {
-    getUpdates: new WebSocket("ws://localhost:7700/socketserver", "protocolOne"),
+    webSocket: new WebSocket("ws://localhost:7700/socketserver"),
     data: {
         projects: {}, //data for currently tracked projects
         devs: {} //data for tickets by developers
@@ -29,15 +29,15 @@ var jira = {
     /**
      * Establish connection
      */
-};jira.getUpdates.onopen = function (event) {
+};jira.webSocket.onopen = function (event) {
     console.log('Browser >> Connected to http://localhost:7700/');
-    jira.getUpdates.send('Test');
+    jira.webSocket.send('Test');
 };
 
 /**
  * Update info
  */
-jira.getUpdates.onmessage = function (event) {
+jira.webSocket.onmessage = function (event) {
     (0, _processData2.default)(jira, JSON.parse(event.data));
     tablesWidgetUpdate();
 };
@@ -342,6 +342,7 @@ exports.default = function (jira, data) {
     for (var item in data) {
         jira.data[item] = data[item];
     }
+    console.log(new Date());
     console.log(jira.data);
 };
 

@@ -10,5 +10,6 @@ export default function(jira, data) {
     for (let item in data) {
         jira.data[item] = data[item];
     }
+    console.log(new Date());
     console.log(jira.data);
 }
