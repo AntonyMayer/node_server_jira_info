@@ -17,15 +17,15 @@ export default function(data = {}, type = "projects") {
         headers = createHeaders(data, type),
         rows = createRows(data, type, headers);
 
-    createTable(container, table, headers, rows);
+    createTable(container, type, table, headers, rows);
 }
 
 /**
  * Create headers for table based on type
  * 
- * @param {any} data object containing data on current projects
- * @param {any} type table type => "projects" || "devs"
- * @returns 
+ * @param {object} data object containing data on current projects
+ * @param {string} type table type => "projects" || "devs"
+ * @returns {object} array with headers' names
  */
 function createHeaders(data, type) {
     let headers = [];
@@ -153,7 +153,9 @@ function createCell(tr, data, name, type, headers) {
  * @param {array} rows array with html nodes to be used as rows
  * @returns {void} 
  */
-function createTable(container, table, headers, rows) {
+function createTable(container, type, table, headers, rows) {
+
+    let tableTitle = createNode('h2', type);
 
     //create headers
     let tr = createNode('tr');
@@ -169,5 +171,6 @@ function createTable(container, table, headers, rows) {
     }
 
     //append table to its container
+    container.appendChild(tableTitle);
     container.appendChild(table);
 }
