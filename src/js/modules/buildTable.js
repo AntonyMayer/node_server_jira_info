@@ -91,9 +91,17 @@ function createRows(data, type, headers) {
     let rows = [];
     for (let row in data) {
         let tr = createNode('tr');
+        addClassModifier(tr);
         rows.push(createCell(tr, data[row], row, type, headers));
     }
     return rows;
+}
+
+function addClassModifier(node, classModifier = '--selected') {
+    classModifier = node.className + classModifier;
+    if (node) node.addEventListener('click', _=>{
+        node.classList.toggle(classModifier);
+    })
 }
 
 /**

@@ -143,9 +143,19 @@ function createRows(data, type, headers) {
     var rows = [];
     for (var row in data) {
         var tr = createNode('tr');
+        addClassModifier(tr);
         rows.push(createCell(tr, data[row], row, type, headers));
     }
     return rows;
+}
+
+function addClassModifier(node) {
+    var classModifier = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '--selected';
+
+    classModifier = node.className + classModifier;
+    if (node) node.addEventListener('click', function (_) {
+        node.classList.toggle(classModifier);
+    });
 }
 
 /**

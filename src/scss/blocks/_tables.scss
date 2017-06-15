@@ -20,6 +20,18 @@ $align: center;
     }
 }
 
+.b_table__tr {
+    transition: all .8s;
+    cursor: pointer;
+    &:hover {
+        background: rgba(0, 0, 0, .4);
+        transition: all .2s;
+    }
+    &--selected {
+        background: rgba(255, 0, 0, .4);
+    }
+}
+
 .b_table__td {
     border-top: 1px solid #fff;
     padding: $margin;
