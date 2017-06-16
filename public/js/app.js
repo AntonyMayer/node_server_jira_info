@@ -5,9 +5,13 @@ var _processData = require('./modules/processData');
 
 var _processData2 = _interopRequireDefault(_processData);
 
-var _buildTable = require('./modules/buildTable');
+var _time = require('./modules/time');
 
-var _buildTable2 = _interopRequireDefault(_buildTable);
+var _time2 = _interopRequireDefault(_time);
+
+var _tables = require('./modules/tables');
+
+var _tables2 = _interopRequireDefault(_tables);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21,8 +25,13 @@ var jira = {
         devs: {} //data for tickets by developers
     },
     widgets: {
+        time: {
+            container: "widget_time",
+            class: "b_time"
+        },
         tables: {
-            contsinerID: "current_projects"
+            container: "widget_projects",
+            class: "b_table"
         }
     }
 
@@ -39,6 +48,7 @@ var jira = {
  */
 jira.webSocket.onmessage = function (event) {
     (0, _processData2.default)(jira, JSON.parse(event.data));
+    (0, _time2.default)(jira);
     tablesWidgetUpdate();
 };
 
@@ -46,12 +56,35 @@ jira.webSocket.onmessage = function (event) {
  * Tables update
  */
 function tablesWidgetUpdate() {
-    document.getElementById(jira.widgets.tables.contsinerID).textContent = '';
-    (0, _buildTable2.default)(jira.data.projects, 'projects');
-    (0, _buildTable2.default)(jira.data.devs, 'devs');
+    document.getElementById(jira.widgets.tables.container).textContent = '';
+    (0, _tables2.default)(jira, 'projects');
+    (0, _tables2.default)(jira, 'devs');
 }
 
-},{"./modules/buildTable":2,"./modules/processData":3}],2:[function(require,module,exports){
+},{"./modules/processData":2,"./modules/tables":3,"./modules/time":4}],2:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+exports.default = function (jira, data) {
+
+    //check if data contains message
+    if (data.message) {
+        console.log(data.message);
+        return;
+    }
+
+    //update jira.data object
+    for (var item in data) {
+        jira.data[item] = data[item];
+    }
+    console.log(new Date());
+    console.log(jira.data);
+};
+
+},{}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -59,18 +92,18 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 exports.default = function () {
-    var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var jira = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "projects";
 
 
     //check if data object is not empty
-    if (noData(data)) return;
+    if (noData(jira.data[type])) return;
 
     //create table, headers, rows, select container
-    var container = document.getElementById("current_projects"),
+    var container = document.getElementById(jira.widgets.tables.container),
         table = createNode('table'),
-        headers = createHeaders(data, type),
-        rows = createRows(data, type, headers);
+        headers = createHeaders(jira.data[type], type),
+        rows = createRows(jira.data[type], type, headers);
 
     createTable(container, type, table, headers, rows);
 };
@@ -107,7 +140,7 @@ function createHeaders(data, type) {
  * Module to build tables based on data type
  * 
  * @export tablesFactory function
- * @param {object} [data={}] data to be used in table 
+ * @param {object} [jira={}] data to be used in table 
  * @param {string} [type="projects"]  table type => "projects" || "devs"
  * @returns {void}
  */
@@ -143,19 +176,16 @@ function createRows(data, type, headers) {
     var rows = [];
     for (var row in data) {
         var tr = createNode('tr');
-        addClassModifier(tr);
         rows.push(createCell(tr, data[row], row, type, headers));
     }
     return rows;
 }
 
 function addClassModifier(node) {
-    var classModifier = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '--selected';
+    var classModifier = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '--active';
 
     classModifier = node.className + classModifier;
-    if (node) node.addEventListener('click', function (_) {
-        node.classList.toggle(classModifier);
-    });
+    node.classList.add(classModifier);
 }
 
 /**
@@ -232,32 +262,15 @@ function createCell(tr, data, name, type, headers) {
         }
     }
 
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
+    for (var i = 0; i < cells.length; i++) {
+        var td = createNode('td', cells[i]),
+            _blocked = 7;
 
-    try {
-        for (var _iterator2 = cells[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var cell = _step2.value;
+        //check for blocked column
+        if (i === _blocked && cells[i] > 0) addClassModifier(td, '--red');
 
-            var td = createNode('td', cell);
-            tr.appendChild(td);
-        }
-    } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
-            }
-        } finally {
-            if (_didIteratorError2) {
-                throw _iteratorError2;
-            }
-        }
+        tr.appendChild(td);
     }
-
     return tr;
 }
 
@@ -276,17 +289,47 @@ function createTable(container, type, table, headers, rows) {
 
     //create headers
     var tr = createNode('tr');
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+        for (var _iterator2 = headers[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var cell = _step2.value;
+
+            var td = createNode('th', cell);
+            tr.appendChild(td);
+        }
+    } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+            }
+        } finally {
+            if (_didIteratorError2) {
+                throw _iteratorError2;
+            }
+        }
+    }
+
+    table.appendChild(tr);
+
+    // table.appendChild(headers);
     var _iteratorNormalCompletion3 = true;
     var _didIteratorError3 = false;
     var _iteratorError3 = undefined;
 
     try {
-        for (var _iterator3 = headers[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            var cell = _step3.value;
+        for (var _iterator3 = rows[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var row = _step3.value;
 
-            var td = createNode('th', cell);
-            tr.appendChild(td);
+            table.appendChild(row);
         }
+
+        //append table to its container
     } catch (err) {
         _didIteratorError3 = true;
         _iteratorError3 = err;
@@ -302,61 +345,30 @@ function createTable(container, type, table, headers, rows) {
         }
     }
 
-    table.appendChild(tr);
-
-    // table.appendChild(headers);
-    var _iteratorNormalCompletion4 = true;
-    var _didIteratorError4 = false;
-    var _iteratorError4 = undefined;
-
-    try {
-        for (var _iterator4 = rows[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-            var row = _step4.value;
-
-            table.appendChild(row);
-        }
-
-        //append table to its container
-    } catch (err) {
-        _didIteratorError4 = true;
-        _iteratorError4 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                _iterator4.return();
-            }
-        } finally {
-            if (_didIteratorError4) {
-                throw _iteratorError4;
-            }
-        }
-    }
-
     container.appendChild(tableTitle);
     container.appendChild(table);
 }
 
-},{}],3:[function(require,module,exports){
-"use strict";
+},{}],4:[function(require,module,exports){
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-exports.default = function (jira, data) {
+exports.default = function () {
+    var jira = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-    //check if data contains message
-    if (data.message) {
-        console.log(data.message);
-        return;
-    }
+    var container = document.getElementById(jira.widgets.time.container),
+        header = document.createElement('h2'),
+        time = new Date(),
+        hours = time.getHours() > 12 ? time.getHours() - 1 : time.getHours(),
+        minutes = time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes();
 
-    //update jira.data object
-    for (var item in data) {
-        jira.data[item] = data[item];
-    }
-    console.log(new Date());
-    console.log(jira.data);
+    container.textContent = '';
+    header.className = jira.widgets.time.class;
+    header.textContent = 'Last update: ' + hours + ' : ' + minutes;
+    container.appendChild(header);
 };
 
 },{}]},{},[1])

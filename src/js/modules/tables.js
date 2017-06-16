@@ -2,20 +2,20 @@
  * Module to build tables based on data type
  * 
  * @export tablesFactory function
- * @param {object} [data={}] data to be used in table 
+ * @param {object} [jira={}] data to be used in table 
  * @param {string} [type="projects"]  table type => "projects" || "devs"
  * @returns {void}
  */
-export default function(data = {}, type = "projects") {
+export default function(jira = {}, type = "projects") {
 
     //check if data object is not empty
-    if (noData(data)) return;
+    if (noData(jira.data[type])) return;
 
     //create table, headers, rows, select container
-    let container = document.getElementById("current_projects"),
+    let container = document.getElementById(jira.widgets.tables.container),
         table = createNode('table'),
-        headers = createHeaders(data, type),
-        rows = createRows(data, type, headers);
+        headers = createHeaders(jira.data[type], type),
+        rows = createRows(jira.data[type], type, headers);
 
     createTable(container, type, table, headers, rows);
 }
@@ -91,17 +91,14 @@ function createRows(data, type, headers) {
     let rows = [];
     for (let row in data) {
         let tr = createNode('tr');
-        addClassModifier(tr);
         rows.push(createCell(tr, data[row], row, type, headers));
     }
     return rows;
 }
 
-function addClassModifier(node, classModifier = '--selected') {
+function addClassModifier(node, classModifier = '--active') {
     classModifier = node.className + classModifier;
-    if (node) node.addEventListener('click', _=>{
-        node.classList.toggle(classModifier);
-    })
+    node.classList.add(classModifier);
 }
 
 /**
@@ -141,12 +138,17 @@ function createCell(tr, data, name, type, headers) {
         cells[0] = name; //set dev name as the first value in cells array
         for (let project in data) {
             //assign dev's project value (num of tickets) to proper position in cells arr
-            cells[headers.indexOf(project)] = data[project]; 
+            cells[headers.indexOf(project)] = data[project];
         }
     }
 
-    for (let cell of cells) {
-        let td = createNode('td', cell);
+    for (let i = 0; i < cells.length; i++) {
+        let td = createNode('td', cells[i]),
+            blocked = 7;
+
+        //check for blocked column
+        if (i === blocked && cells[i] > 0) addClassModifier(td, '--red');
+
         tr.appendChild(td);
     }
     return tr;

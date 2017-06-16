@@ -1,5 +1,6 @@
 import processData from './modules/processData';
-import buildTable from './modules/buildTable';
+import time from './modules/time';
+import buildTable from './modules/tables';
 
 /**
  * Namespace object
@@ -11,8 +12,13 @@ var jira = {
         devs: {} //data for tickets by developers
     },
     widgets: {
+        time: {
+            container: "widget_time",
+            class: "b_time"
+        },
         tables: {
-            contsinerID: "current_projects"
+            container: "widget_projects",
+            class: "b_table"
         }
     }
 }
@@ -30,6 +36,7 @@ jira.webSocket.onopen = function(event) {
  */
 jira.webSocket.onmessage = function(event) {
     processData(jira, JSON.parse(event.data));
+    time(jira);
     tablesWidgetUpdate();
 }
 
@@ -37,7 +44,7 @@ jira.webSocket.onmessage = function(event) {
  * Tables update
  */
 function tablesWidgetUpdate() {
-    document.getElementById(jira.widgets.tables.contsinerID).textContent = '';
-    buildTable(jira.data.projects, 'projects');
-    buildTable(jira.data.devs, 'devs');
+    document.getElementById(jira.widgets.tables.container).textContent = '';
+    buildTable(jira, 'projects');
+    buildTable(jira, 'devs');
 }

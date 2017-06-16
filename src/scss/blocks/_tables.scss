@@ -1,18 +1,19 @@
-$margin: 25px;
-$shadow: 0 0 35px #777;
 $align: center;
+$border: 1px solid #fff;
+$fontIncrement: 1.2rem;
+
 .b_table {
-    margin: $margin;
+    margin: $spacing;
     @if ($align=='center') {
-        margin: $margin auto;
+        margin: $spacing auto;
     }
     border-spacing: 0px;
-    border: 15px solid #fff;
+    border: 1rem solid #fff;
     box-shadow: $shadow;
 }
 
 .b_table__h2 {
-    margin: $margin;
+    margin: $spacing;
     text: {
         transform: uppercase;
         shadow: $shadow;
@@ -33,14 +34,23 @@ $align: center;
 }
 
 .b_table__td {
-    border-top: 1px solid #fff;
-    padding: $margin;
+    border-top: $border;
+    padding: $spacing;
     text-align: $align;
     &:nth-of-type(1) {
         text-align: left;
         font-weight: bold;
-        border-right: 1px solid #fff;
+        border-right: $border;
         background: rgba(0, 0, 0, .1);
+    }
+    &--red {
+        font-size: calc(1rem + #{$fontIncrement});
+        padding: ($spacing - $fontIncrement) $spacing;
+        background: rgba(255, 0, 0, .4);
+        border: {
+            left: $border;
+            right: $border;
+        }
     }
 }
 
