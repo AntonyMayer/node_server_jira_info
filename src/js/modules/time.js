@@ -7,6 +7,6 @@ export default function(jira = {}) {
 
     container.textContent = '';
     header.className = jira.widgets.time.class;
-    header.textContent = `Last update: ${hours} : ${minutes}`;
+    header.textContent = `Last update ${hours} : ${minutes}`;
     container.appendChild(header);
 }
