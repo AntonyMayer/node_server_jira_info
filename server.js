@@ -77,9 +77,9 @@ router.post('/requests', (req, res) => {
     MongoClient.connect(jira.url, function(err, db) {
         assert.equal(null, err);
         removeDocument(db, "tmpJIRAdata", function() {
-            insertDocuments(db, req.body, function() {
+            updateDocuments(db, req.body, function() {
                 db.close();
-                jiraUpdate.emit('update');
+                // jiraUpdate.emit('update');
             });
         });
     });
@@ -103,7 +103,7 @@ MongoClient.connect(jira.url, (err, db) => {
 \*****************************/
 
 var removeDocument = function(db, id, callback) {
-    var collection = db.collection('records');
+    var collection = db.collection('tickets');
     collection.deleteOne({ _id: id }, function(err, result) {
         assert.equal(err, null);
         console.log(`\n${new Date()} \nRemoved temporary data`);
@@ -111,17 +111,25 @@ var removeDocument = function(db, id, callback) {
     });
 }
 
-var insertDocuments = function(db, data, callback) {
-    var collection = db.collection('records');
-    collection.insert(data, function(err, result) {
-        assert.equal(err, null);
-        console.log("Data inserted");
-        callback(result);
-    });
+var updateDocuments = function(db, data, callback) {
+    // console.log(data);
+    var projectsCollection = db.collection('projects'),
+        assigneesCollection = db.collection('assignees');
+    
+    //update 'project collection
+    for (let project of data.projects) {
+        project._id = project.project;
+        projectsCollection.updateOne({ _id: project.project }, project, { upsert: true });
+    }
+    for (let assignee in data.assignees) { //for some reason I made it as an object ¯\_(ツ)_/¯
+        // dv._id = ""
+        assigneesCollection.updateOne({_id: assignee}, data.assignees[assignee], { upsert: true });
+    }
+    console.log('Data updated');
 }
 
 var findDocuments = function(db, callback) {
-    var collection = db.collection('records');
+    var collection = db.collection('tickets');
     collection.find({}).toArray(function(err, docs) {
         assert.equal(err, null);
         console.log(`Data found`);
